@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sso-gateway
+  cloud:
+    gateway:
+      # 开启网关
+      enabled: true
+      # 全局跨域
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            exposed-headers: "Authorization,X-User-Id,X-Username,X-Tenant-Id,X-Roles"
+            max-age: 3600
+      # 发现服务路由
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    health:
+      show-details: always
+    gateway:
+      enabled: true
+
+logging:
+  level:
+    com.sso.gateway: DEBUG
+    org.springframework.cloud.gateway: DEBUG
