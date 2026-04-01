@@ -172,3 +172,35 @@ CREATE TABLE `audit_log` (
     KEY `idx_create_time` (`create_time`),
     KEY `idx_tenant_id` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='审计日志表';
+
+-- -------------------------------------------
+-- 应用注册管理表
+-- -------------------------------------------
+CREATE TABLE IF NOT EXISTS `sso_app` (
+    `id` BIGINT NOT NULL COMMENT '主键',
+    `app_name` VARCHAR(100) NOT NULL COMMENT '应用名称',
+    `app_code` VARCHAR(50) NOT NULL COMMENT '应用编码（唯一标识）',
+    `client_id` VARCHAR(100) NOT NULL COMMENT 'OAuth2 Client ID',
+    `client_secret` VARCHAR(200) NOT NULL COMMENT 'OAuth2 Client Secret（BCrypt加密）',
+    `app_type` TINYINT NOT NULL DEFAULT 1 COMMENT '应用类型：1-Web应用 2-移动应用 3-SPA单页应用 4-服务端应用',
+    `description` VARCHAR(500) DEFAULT NULL COMMENT '应用描述',
+    `logo_url` VARCHAR(500) DEFAULT NULL COMMENT '应用Logo URL',
+    `home_url` VARCHAR(500) DEFAULT NULL COMMENT '应用首页地址',
+    `redirect_uris` TEXT DEFAULT NULL COMMENT '授权回调地址（多个用逗号分隔）',
+    `post_logout_redirect_uris` TEXT DEFAULT NULL COMMENT '登出回调地址（多个用逗号分隔）',
+    `scopes` VARCHAR(1000) NOT NULL DEFAULT 'openid,profile' COMMENT '授权范围（多个用逗号分隔）',
+    `grant_types` VARCHAR(500) NOT NULL DEFAULT 'authorization_code,refresh_token' COMMENT '授权类型（多个用逗号分隔）',
+    `auth_methods` VARCHAR(200) NOT NULL DEFAULT 'client_secret_basic' COMMENT '客户端认证方式',
+    `access_token_validity` INT NOT NULL DEFAULT 7200 COMMENT '访问令牌有效期（秒）',
+    `refresh_token_validity` INT NOT NULL DEFAULT 2592000 COMMENT '刷新令牌有效期（秒）',
+    `status` TINYINT NOT NULL DEFAULT 0 COMMENT '状态：0-启用 1-禁用',
+    `tenant_id` BIGINT NOT NULL DEFAULT 0 COMMENT '所属租户ID',
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `create_by` VARCHAR(64) DEFAULT NULL COMMENT '创建人',
+    `update_by` VARCHAR(64) DEFAULT NULL COMMENT '更新人',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_app_code` (`app_code`, `deleted`),
+    UNIQUE KEY `uk_client_id` (`client_id`, `deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='应用注册管理表';

@@ -20,6 +20,7 @@
         <module>sso-tenant-service</module>
         <module>sso-rbac-service</module>
         <module>sso-audit-service</module>
+        <module>sso-app-service</module>
     </modules>
 
 </project>

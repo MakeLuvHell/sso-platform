@@ -77,3 +77,7 @@ Desktop.ini
 docker/mysql/data/
 docker/redis/data/
 docker/nacos/data/
+
+# Node.js
+node_modules/
+dist/

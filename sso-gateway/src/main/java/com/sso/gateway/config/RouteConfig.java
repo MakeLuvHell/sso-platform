@@ -59,6 +59,15 @@ public class RouteConfig {
                         )
                         .uri("lb://sso-audit-service")
                 )
+                // 应用服务路由
+                .route("sso-app", r -> r
+                        .path("/api/app/**")
+                        .filters(f -> f
+                                .StripPrefix(2)
+                                .dedupeResponseHeader("Access-Control-Allow-Origin", "RETAIN_UNIQUE")
+                        )
+                        .uri("lb://sso-app-service")
+                )
                 // 管理后台路由
                 .route("sso-admin", r -> r
                         .path("/admin/**")
